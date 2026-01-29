@@ -1,0 +1,236 @@
+# MJOB Analyse - Standaard Configuratie
+# =====================================
+
+# Algemene analyse instellingen
+analyse:
+  horizon_jaren: 60
+  inflatie_percentage: 2.0
+  start_jaar: 2024
+
+# Drempelwaarden voor afwijkingen
+drempels:
+  prijs_afwijking_percentage: 15.0
+  cyclus_afwijking_jaren: 3
+  hoeveelheid_afwijking_percentage: 20.0
+  match_confidence_minimum: 0.6
+
+# Kolom mappings per systeemtype
+# Elke mapping vertaalt systeemspecifieke kolommen naar standaard veldnamen
+kolom_mappings:
+  vastware:
+    complex_id: "Complex"
+    complex_omschrijving: "Complex Omschrijving"
+    plaatsaanduiding: "Plaatsaanduiding"
+    element_code: "Element"
+    element_omschrijving: "Element Omschrijving"
+    maatregel: "Maatregel omschrijving"
+    hoeveelheid: "Hoeveelheid"
+    eenheid: "Eenheid"
+    eenheidsprijs: "Eenheidsprijs"
+    cvo_element: "CVO Element"
+    bouwjaar_element: "Bouwjaar Element"
+    bouwjaar_object: "Bouwjaar Object"
+    cyclus: "Cyclus"
+    c_factor: "C.Factor"
+    startjaar: "Eerste jaar"
+    eindjaar: "Laatste jaar"
+    prioriteit: "Prioriteitnummer"
+    totaal_jaren: "Totaal Jaren"
+
+  plato:
+    complex_id: "Complexnummer"
+    complex_omschrijving: "Complexnaam"
+    element_code: "Elementcode"
+    element_omschrijving: "Elementomschrijving"
+    maatregel: "Maatregel"
+    hoeveelheid: "Hoeveelheid"
+    eenheid: "Eenheid"
+    eenheidsprijs: "Eenheidsprijs"
+    cyclus: "Cyclus"
+    startjaar: "Startjaar"
+    bouwjaar: "Bouwjaar"
+
+  oprognose:
+    complex_id: "Complex"
+    element_omschrijving: "Element"
+    maatregel: "Activiteit"
+    hoeveelheid: "Aantal"
+    eenheid: "Eenheid"
+    eenheidsprijs: "Prijs"
+    cyclus: "Interval"
+    startjaar: "Startjaar"
+
+  ibis:
+    complex_id: "Complexnr"
+    complex_omschrijving: "Complexnaam"
+    element_code: "Elementnr"
+    element_omschrijving: "Element"
+    maatregel: "Maatregel"
+    hoeveelheid: "Hoeveelheid"
+    eenheid: "Eenheid"
+    eenheidsprijs: "Prijs per eenheid"
+    cyclus: "Cyclus"
+    startjaar: "Eerste uitvoering"
+
+# Classificatie regels voor bouwdelen
+bouwdeel_classificatie:
+  dak:
+    - dakpan
+    - dakbedekking
+    - dakgoot
+    - hemelwater
+    - dakleer
+    - bitumen
+    - shingles
+    - dakraam
+    - dakkapel
+    - schoorsteen
+    - loodwerk
+    - zinken
+    - boeiboord
+    - windveer
+
+  gevel:
+    - gevel
+    - metselwerk
+    - voegwerk
+    - buitenmuur
+    - gevelbekleding
+    - spouwmuur
+    - gevelplaat
+
+  kozijn:
+    - kozijn
+    - raamkozijn
+    - deurkozijn
+    - draaikip
+    - vast raam
+    - bovenlicht
+    - zijlicht
+
+  glas:
+    - beglazing
+    - dubbelglas
+    - HR++
+    - isolatieglas
+    - ruit
+    - glaskit
+
+  buitenschilderwerk:
+    - buitenschilderwerk
+    - schilderwerk buiten
+    - verven buiten
+    - lakken buiten
+    - coating buiten
+
+  binnenschilderwerk:
+    - binnenschilderwerk
+    - schilderwerk binnen
+    - verven binnen
+    - lakken binnen
+    - behangen
+
+  keuken:
+    - keuken
+    - keukenblok
+    - aanrecht
+    - keukenkast
+
+  badkamer:
+    - badkamer
+    - douche
+    - bad
+    - wastafel
+    - toilet
+    - wc
+    - sanitair
+
+  cv_installatie:
+    - cv-ketel
+    - cv ketel
+    - verwarmingsketel
+    - gasketel
+    - warmtepomp
+    - radiatoren
+    - vloerverwarming
+    - thermostaat
+
+  ventilatie:
+    - ventilatie
+    - mechanische ventilatie
+    - wtw
+    - warmteterugwinning
+    - afzuiging
+    - luchtbehandeling
+
+  elektra:
+    - elektra
+    - elektrische installatie
+    - groepenkast
+    - meterkast
+    - bedrading
+    - stopcontact
+    - schakelaar
+
+  riolering:
+    - riolering
+    - afvoer
+    - hemelwaterafvoer
+    - vuilwaterafvoer
+    - standleiding
+
+  fundering:
+    - fundering
+    - funderingsherstel
+    - palen
+    - vloer begane grond
+
+  algemene_ruimten:
+    - trappenhuis
+    - galerij
+    - entree
+    - lift
+    - gemeenschappelijke ruimte
+
+# Classificatie regels voor activiteitstypen
+activiteit_classificatie:
+  vervanging:
+    - vervang
+    - vernieuw
+    - nieuw
+    - plaatsen
+
+  schilderwerk:
+    - schilder
+    - verf
+    - lak
+    - coating
+    - beits
+
+  reparatie:
+    - reparatie
+    - repareren
+    - herstel
+    - herstellen
+
+  inspectie:
+    - inspectie
+    - keuring
+    - controle
+    - schouw
+
+  onderhoud:
+    - onderhoud
+    - reinig
+    - schoonmaak
+    - reiniging
+
+# Output instellingen
+output:
+  excel:
+    max_rijen_per_tab: 100000
+    auto_kolom_breedte: true
+    kleur_afwijkingen: true
+  html:
+    include_grafieken: true
+    template: "standaard"

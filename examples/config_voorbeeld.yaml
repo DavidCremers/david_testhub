@@ -1,0 +1,60 @@
+# Voorbeeld configuratie voor MJOB Analyse
+# ==========================================
+# Kopieer dit bestand en pas aan voor jouw situatie
+
+# Algemene analyse instellingen
+analyse:
+  horizon_jaren: 60          # Analyse periode in jaren
+  inflatie_percentage: 2.0   # Jaarlijkse inflatie
+  start_jaar: 2024           # Startjaar voor berekeningen
+
+# Drempelwaarden voor afwijkingsdetectie
+drempels:
+  prijs_afwijking_percentage: 15.0   # Prijsverschil >15% = uitschieter
+  cyclus_afwijking_jaren: 3          # Cyclusverschil >3 jaar = afwijking
+  hoeveelheid_afwijking_percentage: 20.0
+  match_confidence_minimum: 0.6      # Minimum confidence voor matches
+
+# Custom kolom mappings
+# Voeg hier jouw specifieke kolomnamen toe
+kolom_mappings:
+  # Voorbeeld voor een custom Vastware export
+  custom_vastware:
+    complex_id: "Complexnummer"
+    complex_omschrijving: "Complex naam"
+    element_code: "Element"
+    element_omschrijving: "Element Omschrijving"
+    maatregel: "Maatregel omschrijving"
+    hoeveelheid: "Hoeveelheid"
+    eenheid: "Eenheid"
+    eenheidsprijs: "Prijs per eenheid"
+    cyclus: "Cyclus"
+    startjaar: "Eerste jaar"
+
+# Custom classificatie regels
+# Voeg keywords toe om bouwdelen te herkennen
+bouwdeel_classificatie:
+  # Voorbeeld: voeg extra keywords toe voor bestaande categorieën
+  dak:
+    - dakpan
+    - dakbedekking
+    - dakgoot
+    - schoorstee
+    - EPDM
+    - bitumineus
+
+  # Voorbeeld: maak een nieuwe categorie
+  parkeergarage:
+    - parkeergarage
+    - parkeren
+    - parkeerdek
+    - parkeerplaats
+
+# Output instellingen
+output:
+  excel:
+    max_rijen_per_tab: 100000
+    auto_kolom_breedte: true
+    kleur_afwijkingen: true
+  html:
+    include_grafieken: true

@@ -1,0 +1,5 @@
+"""Configuratie module voor MJOB Analyse."""
+
+from .settings import Config, load_config
+
+__all__ = ["Config", "load_config"]
