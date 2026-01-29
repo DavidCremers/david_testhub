@@ -86,6 +86,12 @@ class ExcelExport:
         # Bouwdeel samenvatting
         self._create_building_part_sheet(analysis_results, name_a, name_b)
 
+        # Gedetailleerde ingreep analyse
+        if "gedetailleerd" in analysis_results:
+            self._create_detailed_sheet(
+                analysis_results["gedetailleerd"], name_a, name_b
+            )
+
         # Cashflow vergelijking
         if "financieel" in analysis_results:
             self._create_cashflow_sheet(
@@ -279,6 +285,39 @@ class ExcelExport:
                     row += 2
 
         self._autofit_columns(ws)
+
+    def _create_detailed_sheet(
+        self, detailed_results: dict, name_a: str, name_b: str
+    ) -> None:
+        """Maak tabblad met gedetailleerde ingreep analyse."""
+        # Alle ingrepen detail
+        detail_df = detailed_results.get("detail_dataframe")
+        if detail_df is not None and not detail_df.empty:
+            ws = self.workbook.create_sheet("Ingreep Detail")
+            self._write_dataframe(ws, detail_df)
+
+            # Kleur rijen waar ingreep alleen in 1 systeem zit
+            for row in range(2, len(detail_df) + 2):
+                aanwezig = ws.cell(row=row, column=4).value
+                if aanwezig == "Nee":
+                    for col in range(1, len(detail_df.columns) + 1):
+                        ws.cell(row=row, column=col).fill = self.NEUTRAL_FILL
+
+            self._autofit_columns(ws)
+
+        # Per bouwdeel samenvatting
+        bouwdeel_df = detailed_results.get("per_bouwdeel")
+        if bouwdeel_df is not None and not bouwdeel_df.empty:
+            ws = self.workbook.create_sheet("Per Bouwdeel Detail")
+            self._write_dataframe(ws, bouwdeel_df)
+
+            # Formatteer kosten kolommen
+            for row in range(2, len(bouwdeel_df) + 2):
+                for col in [2, 3, 4]:  # Kosten kolommen
+                    if col <= len(bouwdeel_df.columns):
+                        ws.cell(row=row, column=col).number_format = "€#,##0"
+
+            self._autofit_columns(ws)
 
     def _create_cashflow_sheet(
         self, financial_results: dict, name_a: str, name_b: str

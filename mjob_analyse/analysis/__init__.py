@@ -5,6 +5,7 @@ from .cycle import CyclusAnalyse
 from .completeness import CompleetheidsAnalyse
 from .quantity import HoeveelhedenAnalyse
 from .financial import FinancieleAnalyse
+from .detailed import GedetailleerdeAnalyse
 
 __all__ = [
     "PrijsAnalyse",
@@ -12,4 +13,5 @@ __all__ = [
     "CompleetheidsAnalyse",
     "HoeveelhedenAnalyse",
     "FinancieleAnalyse",
+    "GedetailleerdeAnalyse",
 ]

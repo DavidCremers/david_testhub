@@ -18,6 +18,7 @@ from .analysis.cycle import CyclusAnalyse
 from .analysis.completeness import CompleetheidsAnalyse
 from .analysis.quantity import HoeveelhedenAnalyse
 from .analysis.financial import FinancieleAnalyse
+from .analysis.detailed import GedetailleerdeAnalyse
 from .output.terminal import TerminalOutput
 from .output.excel import ExcelExport
 from .output.html import HtmlRapport
@@ -42,6 +43,7 @@ class AnalyseType(str, Enum):
     compleetheid = "compleetheid"
     hoeveelheden = "hoeveelheden"
     financieel = "financieel"
+    gedetailleerd = "gedetailleerd"
 
 
 @app.command()
@@ -269,6 +271,25 @@ def vergelijk(
                 df_a, df_b, matches_df, naam_a, naam_b
             )
             terminal.print_info(results["financieel"]["samenvatting"])
+
+        if analyse in [AnalyseType.alle, AnalyseType.gedetailleerd]:
+            terminal.print_subheader("Gedetailleerde ingreep-analyse")
+            detail_analyse = GedetailleerdeAnalyse(cfg, benchmark)
+            results["gedetailleerd"] = detail_analyse.analyze(
+                df_a, df_b, naam_a, naam_b
+            )
+            terminal.print_info(results["gedetailleerd"]["samenvatting"])
+
+            # Toon top kostenverschillen per ingreep
+            top_kosten = results["gedetailleerd"].get("top_kostenverschillen", [])
+            if top_kosten:
+                terminal.print_subheader("Top kostenverschillen per ingreep")
+                for item in top_kosten[:5]:
+                    terminal.print_key_value(
+                        f"  {item['ingreep'][:40]}",
+                        f"€{item['verschil']:+,.0f}",
+                        highlight=abs(item['verschil']) > 50000
+                    )
 
         # Toon samenvatting
         terminal.print_summary(results)
