@@ -9,7 +9,7 @@ import { Text, Card } from '../../src/components/ui';
 import { TaskItem } from '../../src/components/tasks';
 import { WorkspaceToggle } from '../../src/components/workspace/WorkspaceToggle';
 import { QuickInput } from '../../src/components/common/QuickInput';
-import type { Task } from '@flowday/shared';
+import type { Task } from '../../src/shared';
 
 export default function TodayScreen() {
   const colors = useColors();

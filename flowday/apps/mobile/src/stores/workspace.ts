@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Workspace, WorkspaceType } from '@flowday/shared';
-import { getWorkspaces, getWorkspaceByType } from '@flowday/shared';
+import type { Workspace, WorkspaceType } from '../shared';
+import { getWorkspaces, getWorkspaceByType } from '../shared';
 
 interface WorkspaceState {
   workspaces: Workspace[];

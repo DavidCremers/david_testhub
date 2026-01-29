@@ -8,7 +8,7 @@ import { Text, SegmentedControl } from '../../src/components/ui';
 import { TaskList } from '../../src/components/tasks';
 import { WorkspaceToggle } from '../../src/components/workspace/WorkspaceToggle';
 import { QuickInput } from '../../src/components/common/QuickInput';
-import type { Task, TaskStatus } from '@flowday/shared';
+import type { Task, TaskStatus } from '../../src/shared';
 
 type FilterType = 'all' | 'open' | 'completed';
 

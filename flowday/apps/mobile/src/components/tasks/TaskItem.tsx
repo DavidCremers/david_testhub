@@ -6,8 +6,8 @@ import {
   Pressable,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import type { Task } from '@flowday/shared';
-import { formatDeadline } from '@flowday/shared';
+import type { Task } from '../../shared';
+import { formatDeadline } from '../../shared';
 import { useColors, priorityColors } from '../../theme/colors';
 import { spacing, radius } from '../../theme/spacing';
 import { Text } from '../ui/Text';

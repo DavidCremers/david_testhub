@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Task, TaskCreate, TaskUpdate, Label } from '@flowday/shared';
+import type { Task, TaskCreate, TaskUpdate, Label } from '../shared';
 import {
   getTasks,
   getTodayTasks,
@@ -10,7 +10,7 @@ import {
   reopenTask as apiReopenTask,
   deleteTask as apiDeleteTask,
   getLabels,
-} from '@flowday/shared';
+} from '../shared';
 
 interface TasksState {
   tasks: Task[];

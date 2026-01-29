@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import type { User } from '@flowday/shared';
+import type { User } from '../shared';
 import {
   signIn as apiSignIn,
   signUp as apiSignUp,
   signOut as apiSignOut,
   getCurrentUser,
   onAuthStateChange,
-} from '@flowday/shared';
+} from '../shared';
 import type { Subscription } from '@supabase/supabase-js';
 
 interface AuthState {

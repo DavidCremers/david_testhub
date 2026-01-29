@@ -7,8 +7,8 @@ import { spacing, radius } from '../../src/theme/spacing';
 import { Text, Card, SegmentedControl } from '../../src/components/ui';
 import { WorkspaceToggle } from '../../src/components/workspace/WorkspaceToggle';
 import { QuickInput } from '../../src/components/common/QuickInput';
-import { formatDate, formatTime, addDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from '@flowday/shared';
-import type { CalendarEvent } from '@flowday/shared';
+import { formatDate, formatTime, addDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from '../../src/shared';
+import type { CalendarEvent } from '../../src/shared';
 
 type ViewType = 'day' | 'week' | 'month';
 

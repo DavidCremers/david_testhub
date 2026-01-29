@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import type { WorkspaceType } from '@flowday/shared';
+import type { WorkspaceType } from '../../shared';
 import { useWorkspaceStore } from '../../stores/workspace';
 import { SegmentedControl } from '../ui/SegmentedControl';
 import { workspaceColors } from '../../theme/colors';

@@ -6,7 +6,7 @@ import {
   RefreshControl,
   ListRenderItem,
 } from 'react-native';
-import type { Task } from '@flowday/shared';
+import type { Task } from '../../shared';
 import { useColors } from '../../theme/colors';
 import { spacing } from '../../theme/spacing';
 import { Text } from '../ui/Text';

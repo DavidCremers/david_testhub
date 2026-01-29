@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { CalendarEvent, CalendarEventCreate, CalendarEventUpdate } from '@flowday/shared';
+import type { CalendarEvent, CalendarEventCreate, CalendarEventUpdate } from '../shared';
 import {
   getEvents,
   getTodayEvents,
@@ -8,7 +8,7 @@ import {
   createEvent as apiCreateEvent,
   updateEvent as apiUpdateEvent,
   deleteEvent as apiDeleteEvent,
-} from '@flowday/shared';
+} from '../shared';
 
 interface EventsState {
   events: CalendarEvent[];
