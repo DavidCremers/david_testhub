@@ -2,27 +2,5 @@
   "name": "flowday",
   "version": "1.0.0",
   "private": true,
-  "description": "Personal task and agenda application",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "mobile": "pnpm --filter @flowday/mobile",
-    "web": "pnpm --filter @flowday/web",
-    "shared": "pnpm --filter @flowday/shared",
-    "ui": "pnpm --filter @flowday/ui",
-    "dev:mobile": "pnpm mobile start",
-    "dev:web": "pnpm mobile start --web",
-    "build:web": "pnpm mobile export --platform web",
-    "typecheck": "pnpm -r typecheck",
-    "lint": "pnpm -r lint"
-  },
-  "devDependencies": {
-    "typescript": "^5.3.3"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "packageManager": "pnpm@8.14.0"
+  "description": "Personal task and agenda application"
 }
