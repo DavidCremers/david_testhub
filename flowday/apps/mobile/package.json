@@ -37,6 +37,7 @@
     "react-native-screens": "~4.10.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.20.0",
+    "rrule": "^2.8.1",
     "whatwg-fetch": "^3.6.20",
     "zustand": "^4.5.0"
   },

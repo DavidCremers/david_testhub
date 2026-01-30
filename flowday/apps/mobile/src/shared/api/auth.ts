@@ -71,7 +71,7 @@ export async function signInWithMagicLink(email: string): Promise<void> {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: window?.location?.origin || undefined,
+      emailRedirectTo: 'flowday://auth/callback',
     },
   });
 
