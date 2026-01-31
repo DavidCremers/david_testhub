@@ -12,6 +12,7 @@ eggs/
 .eggs/
 lib/
 !taskflow-web/src/lib/
+!taskflow-expo/src/lib/
 lib64/
 parts/
 sdist/
