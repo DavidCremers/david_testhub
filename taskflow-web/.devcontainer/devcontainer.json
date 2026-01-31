@@ -1,0 +1,49 @@
+{
+  "name": "TaskFlow Development",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/supabase/cli:1": {}
+  },
+  "forwardPorts": [3000, 54321, 54322, 54323],
+  "portsAttributes": {
+    "3000": {
+      "label": "TaskFlow App",
+      "onAutoForward": "openBrowser"
+    },
+    "54321": {
+      "label": "Supabase API"
+    },
+    "54322": {
+      "label": "Supabase Studio"
+    },
+    "54323": {
+      "label": "Supabase Inbucket"
+    }
+  },
+  "postCreateCommand": "npm install && supabase start",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "formulahendry.auto-rename-tag",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        }
+      }
+    }
+  },
+  "remoteEnv": {
+    "NEXT_PUBLIC_SUPABASE_URL": "http://localhost:54321",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "${localEnv:SUPABASE_ANON_KEY}"
+  }
+}

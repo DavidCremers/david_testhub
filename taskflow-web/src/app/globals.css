@@ -1,0 +1,233 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 245, 245, 247;
+  --card-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 0, 0, 0;
+    --card-rgb: 28, 28, 30;
+  }
+}
+
+/* iOS-style base */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+/* PWA safe areas for iOS */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* iOS-style scrollbar (hidden but functional) */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Momentum scrolling on iOS */
+.scroll-smooth {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Disable text selection on buttons (iOS-like) */
+button, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS-style input focus */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+}
+
+/* Glassmorphism utilities */
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .glass-dark {
+    background: rgba(28, 28, 30, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .glass {
+      background: rgba(28, 28, 30, 0.8);
+    }
+
+    .glass-card {
+      background: rgba(44, 44, 46, 0.9);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+/* iOS-style shadows */
+@layer utilities {
+  .shadow-ios {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08),
+                0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .shadow-ios-lg {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08),
+                0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .shadow-ios-xl {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12),
+                0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* iOS-style animations */
+@layer utilities {
+  .animate-scale-in {
+    animation: scale-in 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Bottom navigation safe padding */
+.pb-safe {
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+}
+
+/* iOS-style button press effect */
+.btn-press {
+  transition: transform 0.1s ease-out;
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* iOS segmented control style */
+.segmented-control {
+  background: rgba(118, 118, 128, 0.12);
+  border-radius: 9px;
+  padding: 2px;
+}
+
+.segmented-item {
+  border-radius: 7px;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+}
+
+.segmented-item-active {
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08),
+              0 3px 6px rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  .segmented-control {
+    background: rgba(118, 118, 128, 0.24);
+  }
+
+  .segmented-item-active {
+    background: rgba(99, 99, 102, 0.5);
+  }
+}
+
+/* Prevent rubber-banding on iOS */
+html, body {
+  overscroll-behavior: none;
+}
+
+/* Fix for iOS input zoom */
+@media screen and (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
