@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "TaskFlow",
+    "slug": "taskflow",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a1a2e"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.taskflow.app",
+      "infoPlist": {
+        "NSSpeechRecognitionUsageDescription": "TaskFlow gebruikt spraakherkenning om taken en agenda-items te maken.",
+        "NSMicrophoneUsageDescription": "TaskFlow heeft toegang tot de microfoon nodig voor spraakherkenning."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a1a2e"
+      },
+      "package": "com.taskflow.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-av",
+        {
+          "microphonePermission": "TaskFlow heeft toegang tot de microfoon nodig voor spraakherkenning."
+        }
+      ]
+    ]
+  }
+}
