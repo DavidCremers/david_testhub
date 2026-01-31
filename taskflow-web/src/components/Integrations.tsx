@@ -1,14 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { Mail, MessageCircle, Shield, Check, ExternalLink, Info, Lock } from 'lucide-react'
+import { Mail, MessageCircle, Shield, Check, ExternalLink, Info, Lock, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { GoogleCalendarSync } from './GoogleCalendarSync'
 
 export function Integrations() {
   const [gmailConnected, setGmailConnected] = useState(false)
 
   return (
     <div className="space-y-6">
+      {/* Google Calendar Integration */}
+      <GoogleCalendarSync />
+
       {/* Security Notice */}
       <div className="bg-green-50 dark:bg-green-900/20 rounded-2xl p-4 border border-green-200 dark:border-green-800">
         <div className="flex gap-3">
