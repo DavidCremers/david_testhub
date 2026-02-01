@@ -1,6 +1,6 @@
 export type TaskCategory = 'work' | 'personal'
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
-export type ImportSource = 'manual' | 'voice' | 'gmail' | 'whatsapp'
+export type ImportSource = 'manual' | 'voice' | 'gmail' | 'whatsapp' | 'google_calendar'
 
 export interface Profile {
   id: string
@@ -11,6 +11,10 @@ export interface Profile {
     defaultCategory: TaskCategory
     theme: 'light' | 'dark' | 'system'
   }
+  google_access_token: string | null
+  google_refresh_token: string | null
+  google_token_expiry: string | null
+  google_connected: boolean
   created_at: string
   updated_at: string
 }

@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { fetchGoogleCalendarEvents, parseGoogleEvent } from '@/lib/google-calendar';
 
 export async function POST() {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = createServerSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {

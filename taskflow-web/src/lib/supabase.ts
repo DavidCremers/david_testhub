@@ -1,9 +1,12 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import type { Database } from '@/types/database'
+import { createBrowserClient as createSupabaseBrowserClient } from '@supabase/ssr'
 
 // Client-side Supabase client (secure, respects RLS)
 export const createBrowserClient = () => {
-  return createClientComponentClient<Database>()
+  // Use placeholder values during SSR/build time - will be replaced with real values on client
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
+
+  return createSupabaseBrowserClient(supabaseUrl, supabaseKey)
 }
 
 // Auth helpers with error handling
