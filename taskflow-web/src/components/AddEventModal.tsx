@@ -220,9 +220,10 @@ export function AddEventModal({ category, onClose }: AddEventModalProps) {
               className={cn(
                 'w-full py-4 rounded-2xl font-semibold text-white btn-press',
                 'disabled:opacity-50 disabled:cursor-not-allowed',
-                `bg-${accentColor}-500 hover:bg-${accentColor}-600`,
                 'shadow-lg',
-                `shadow-${accentColor}-500/25`
+                category === 'work'
+                  ? 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/25'
+                  : 'bg-purple-500 hover:bg-purple-600 shadow-purple-500/25'
               )}
             >
               {isSubmitting ? 'Toevoegen...' : 'Afspraak toevoegen'}
