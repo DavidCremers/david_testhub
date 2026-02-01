@@ -1,6 +1,3 @@
 {
-  "buildCommand": "cd taskflow-web && npm install && npm run build",
-  "outputDirectory": "taskflow-web/.next",
-  "installCommand": "cd taskflow-web && npm install",
-  "framework": "nextjs"
+  "rootDirectory": "taskflow-web"
 }
