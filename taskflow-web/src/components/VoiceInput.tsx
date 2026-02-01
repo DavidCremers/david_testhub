@@ -348,6 +348,13 @@ export function VoiceInput({ category, onClose }: VoiceInputProps) {
               </div>
             )}
 
+            {/* Browser support message */}
+            {!isSupported && (
+              <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-xl text-yellow-700 dark:text-yellow-300 text-sm">
+                Spraakherkenning wordt niet ondersteund in deze browser. Je kunt wel tekst typen.
+              </div>
+            )}
+
             {/* Suggestions */}
             {!transcript && !interimTranscript && (
               <div className="mt-4">

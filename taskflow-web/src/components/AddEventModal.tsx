@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, MapPin, Clock, Mic } from 'lucide-react'
+import { X, MapPin, Clock, Mic, AlertCircle } from 'lucide-react'
 import { useEvents } from '@/hooks/useEvents'
 import type { TaskCategory } from '@/types/database'
 import { cn } from '@/lib/utils'
@@ -22,6 +22,7 @@ export function AddEventModal({ category, onClose }: AddEventModalProps) {
   const [isAllDay, setIsAllDay] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showVoice, setShowVoice] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const accentColor = category === 'work' ? 'work' : 'personal'
 
@@ -30,6 +31,8 @@ export function AddEventModal({ category, onClose }: AddEventModalProps) {
     if (!title.trim() || !startDate || isSubmitting) return
 
     setIsSubmitting(true)
+    setError(null)
+
     try {
       const start = new Date(startDate)
       const end = endDate ? new Date(endDate) : new Date(start.getTime() + 60 * 60 * 1000)
@@ -50,8 +53,10 @@ export function AddEventModal({ category, onClose }: AddEventModalProps) {
         attendees: [],
       })
       onClose()
-    } catch (error) {
-      console.error('Failed to add event:', error)
+    } catch (err) {
+      console.error('Failed to add event:', err)
+      const message = err instanceof Error ? err.message : 'Er ging iets mis bij het toevoegen'
+      setError(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -86,6 +91,14 @@ export function AddEventModal({ category, onClose }: AddEventModalProps) {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-5 space-y-5">
+            {/* Error message */}
+            {error && (
+              <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-300 text-sm">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {error}
+              </div>
+            )}
+
             {/* Title */}
             <div>
               <input
