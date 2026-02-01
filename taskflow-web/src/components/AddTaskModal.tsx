@@ -198,14 +198,17 @@ export function AddTaskModal({ category, onClose }: AddTaskModalProps) {
             <button
               type="submit"
               disabled={!title.trim() || isSubmitting}
-              className={cn(
-                'w-full py-4 rounded-2xl font-semibold text-white btn-press',
-                'disabled:opacity-50 disabled:cursor-not-allowed',
-                'shadow-lg',
-                category === 'work'
-                  ? 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/25'
-                  : 'bg-purple-500 hover:bg-purple-600 shadow-purple-500/25'
-              )}
+              style={{
+                width: '100%',
+                padding: '16px',
+                borderRadius: '16px',
+                fontWeight: 600,
+                color: 'white',
+                backgroundColor: category === 'work' ? '#3b82f6' : '#a855f7',
+                border: 'none',
+                cursor: !title.trim() || isSubmitting ? 'not-allowed' : 'pointer',
+                opacity: !title.trim() || isSubmitting ? 0.5 : 1,
+              }}
             >
               {isSubmitting ? 'Toevoegen...' : 'Taak toevoegen'}
             </button>
