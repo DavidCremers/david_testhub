@@ -140,14 +140,39 @@ export function GoogleCalendarSync({ onSyncComplete }: GoogleCalendarSyncProps) 
               <button
                 onClick={syncCalendar}
                 disabled={isSyncing}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white rounded-lg transition-colors text-sm font-medium"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 16px',
+                  backgroundColor: '#6366f1',
+                  color: 'white',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  cursor: isSyncing ? 'not-allowed' : 'pointer',
+                  opacity: isSyncing ? 0.5 : 1,
+                }}
               >
                 <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
                 {isSyncing ? 'Synchroniseren...' : 'Sync'}
               </button>
               <button
                 onClick={disconnectGoogle}
-                className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors text-sm font-medium"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 16px',
+                  backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                  color: '#f87171',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                }}
               >
                 <Unlink className="w-4 h-4" />
                 Loskoppelen
@@ -156,7 +181,19 @@ export function GoogleCalendarSync({ onSyncComplete }: GoogleCalendarSyncProps) 
           ) : (
             <button
               onClick={connectGoogle}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm font-medium"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                borderRadius: '8px',
+                border: 'none',
+                fontSize: '14px',
+                fontWeight: 500,
+                cursor: 'pointer',
+              }}
             >
               <Link2 className="w-4 h-4" />
               Verbinden
