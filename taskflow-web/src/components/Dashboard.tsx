@@ -34,6 +34,54 @@ export function Dashboard({ category }: DashboardProps) {
 
   return (
     <div className="space-y-6">
+      {/* Quick Actions - Top */}
+      <section className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowAddTask(true)}
+            style={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '14px',
+              borderRadius: '12px',
+              fontWeight: 600,
+              backgroundColor: category === 'work' ? '#3b82f6' : '#a855f7',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '15px',
+            }}
+          >
+            <Plus className="w-5 h-5" />
+            Nieuwe Taak
+          </button>
+          <button
+            onClick={() => setShowAddEvent(true)}
+            style={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '14px',
+              borderRadius: '12px',
+              fontWeight: 600,
+              backgroundColor: category === 'work' ? '#dbeafe' : '#f3e8ff',
+              color: category === 'work' ? '#1d4ed8' : '#7c3aed',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '15px',
+            }}
+          >
+            <Plus className="w-5 h-5" />
+            Afspraak
+          </button>
+        </div>
+      </section>
+
       {/* Stats */}
       <div className="grid grid-cols-4 gap-3">
         <StatCard
@@ -115,54 +163,10 @@ export function Dashboard({ category }: DashboardProps) {
         )}
       </section>
 
-      {/* Quick Actions */}
-      <section className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
-        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
-          Snel toevoegen
-        </h2>
-        <div className="flex gap-3">
-          <button
-            onClick={() => setShowAddTask(true)}
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              padding: '12px',
-              borderRadius: '12px',
-              fontWeight: 500,
-              backgroundColor: category === 'work' ? '#dbeafe' : '#f3e8ff',
-              color: category === 'work' ? '#1d4ed8' : '#7c3aed',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            <Plus className="w-5 h-5" />
-            Taak
-          </button>
-          <button
-            onClick={() => setShowAddEvent(true)}
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              padding: '12px',
-              borderRadius: '12px',
-              fontWeight: 500,
-              backgroundColor: category === 'work' ? '#dbeafe' : '#f3e8ff',
-              color: category === 'work' ? '#1d4ed8' : '#7c3aed',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            <Plus className="w-5 h-5" />
-            Afspraak
-          </button>
-        </div>
-      </section>
+      {/* Footer */}
+      <div className="text-center text-xs text-gray-400 py-4">
+        Made by David Cremers
+      </div>
 
       {/* Modals */}
       {showAddTask && (
