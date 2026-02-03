@@ -29,40 +29,75 @@ export async function POST() {
     );
 
     // Parse and prepare events for database
-    const eventsToSync = googleEvents.map((event: any) => ({
-      ...parseGoogleEvent(event),
-      user_id: user.id,
-      category: 'personal', // Default category
-    }));
-
-    // Upsert events (update if exists, insert if new)
+    const errors: string[] = [];
     let synced = 0;
-    for (const event of eventsToSync) {
-      const { data: existing } = await supabase
-        .from('events')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('source_reference', event.source_reference)
-        .single();
 
-      if (existing) {
-        // Update existing event
-        await supabase
+    for (const event of googleEvents) {
+      try {
+        const parsed = parseGoogleEvent(event);
+
+        // Check if event already exists
+        const { data: existing } = await supabase
           .from('events')
-          .update({
-            title: event.title,
-            description: event.description,
-            start_date: event.start_date,
-            end_date: event.end_date,
-            is_all_day: event.is_all_day,
-            location: event.location,
-          })
-          .eq('id', existing.id);
-      } else {
-        // Insert new event
-        await supabase.from('events').insert(event);
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('source_reference', parsed.source_reference)
+          .single();
+
+        if (existing) {
+          // Update existing event
+          const { error: updateError } = await supabase
+            .from('events')
+            .update({
+              title: parsed.title,
+              description: parsed.description,
+              start_date: parsed.start_date,
+              end_date: parsed.end_date,
+              is_all_day: parsed.is_all_day,
+              location: parsed.location,
+            })
+            .eq('id', existing.id);
+
+          if (updateError) {
+            errors.push(`Update error: ${updateError.message}`);
+          } else {
+            synced++;
+          }
+        } else {
+          // Insert new event
+          const { error: insertError } = await supabase
+            .from('events')
+            .insert({
+              user_id: user.id,
+              title: parsed.title,
+              description: parsed.description,
+              start_date: parsed.start_date,
+              end_date: parsed.end_date,
+              is_all_day: parsed.is_all_day,
+              location: parsed.location,
+              category: 'personal',
+              import_source: 'google_calendar',
+              source_reference: parsed.source_reference,
+            });
+
+          if (insertError) {
+            errors.push(`Insert error: ${insertError.message}`);
+          } else {
+            synced++;
+          }
+        }
+      } catch (eventError: any) {
+        errors.push(`Event parse error: ${eventError.message}`);
       }
-      synced++;
+    }
+
+    if (errors.length > 0) {
+      return NextResponse.json({
+        success: false,
+        message: `${synced} events gesynchroniseerd, ${errors.length} fouten`,
+        errors: errors.slice(0, 5), // Return first 5 errors
+        count: synced,
+      });
     }
 
     return NextResponse.json({
