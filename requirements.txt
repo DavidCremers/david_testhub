@@ -13,5 +13,9 @@ rich>=13.0.0
 # Configuratie
 pyyaml>=6.0
 
+# Web scraping (Carrière Nieuws Monitor)
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
 # Type hints (optioneel voor development)
 typing-extensions>=4.5.0
