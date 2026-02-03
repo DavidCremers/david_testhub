@@ -251,20 +251,36 @@ function TaskRow({
 }
 
 function EventRow({ event }: { event: any }) {
-  const time = event.is_all_day
-    ? 'Hele dag'
-    : new Date(event.start_date).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })
+  const startDate = new Date(event.start_date)
+  const endDate = event.end_date ? new Date(event.end_date) : null
+
+  // Format day and date
+  const dayName = startDate.toLocaleDateString('nl-NL', { weekday: 'long' })
+  const dateStr = startDate.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long' })
+
+  // Format time
+  let timeStr = ''
+  if (event.is_all_day) {
+    timeStr = 'Hele dag'
+  } else {
+    const startTime = startDate.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })
+    const endTime = endDate ? endDate.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' }) : null
+    timeStr = endTime ? `${startTime} - ${endTime}` : startTime
+  }
 
   return (
     <div className="flex items-center gap-3 p-2">
       <div className={cn(
-        'w-1 h-10 rounded-full',
+        'w-1 h-12 rounded-full',
         event.category === 'work' ? 'bg-work-500' : 'bg-personal-500'
       )} />
       <div className="flex-1">
         <p className="font-medium text-gray-900 dark:text-white">{event.title}</p>
-        <p className="text-sm text-gray-500">
-          {time}
+        <p className="text-sm text-gray-500 capitalize">
+          {dayName} {dateStr}
+        </p>
+        <p className="text-xs text-gray-400">
+          {timeStr}
           {event.location && ` • ${event.location}`}
         </p>
       </div>
