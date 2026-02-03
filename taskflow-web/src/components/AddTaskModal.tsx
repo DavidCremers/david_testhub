@@ -83,10 +83,26 @@ export function AddTaskModal({ category, onClose }: AddTaskModalProps) {
             </button>
             <h2 className="font-semibold text-gray-900 dark:text-white">Nieuwe taak</h2>
             <button
-              onClick={() => setShowVoice(true)}
-              className={`text-${accentColor}-600 p-1`}
+              type="button"
+              onClick={() => {
+                if (title.trim() && !isSubmitting) {
+                  const form = document.querySelector('form');
+                  if (form) form.requestSubmit();
+                }
+              }}
+              disabled={!title.trim() || isSubmitting}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                fontWeight: 600,
+                color: 'white',
+                backgroundColor: !title.trim() || isSubmitting ? '#9ca3af' : (category === 'work' ? '#3b82f6' : '#a855f7'),
+                border: 'none',
+                cursor: !title.trim() || isSubmitting ? 'not-allowed' : 'pointer',
+                fontSize: '14px',
+              }}
             >
-              <Mic className="w-5 h-5" />
+              {isSubmitting ? '...' : 'Opslaan'}
             </button>
           </div>
 
