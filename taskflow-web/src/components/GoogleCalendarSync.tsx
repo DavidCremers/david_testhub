@@ -186,7 +186,7 @@ export function GoogleCalendarSync({ onSyncComplete }: GoogleCalendarSyncProps) 
                 alignItems: 'center',
                 gap: '8px',
                 padding: '8px 16px',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: '#4285f4',
                 color: 'white',
                 borderRadius: '8px',
                 border: 'none',
@@ -196,7 +196,7 @@ export function GoogleCalendarSync({ onSyncComplete }: GoogleCalendarSyncProps) 
               }}
             >
               <Link2 className="w-4 h-4" />
-              Verbinden
+              Verbinden met Google
             </button>
           )}
         </div>

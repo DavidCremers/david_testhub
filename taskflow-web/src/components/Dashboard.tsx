@@ -62,31 +62,31 @@ export function Dashboard({ category }: DashboardProps) {
         />
       </div>
 
-      {/* Today's Tasks */}
+      {/* All Tasks */}
       <section className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <span className="text-yellow-500">☀️</span> Vandaag
+            <span className="text-yellow-500">📋</span> Alle taken ({incompleteTasks.length})
           </h2>
         </div>
 
-        {todayTasks.length === 0 ? (
+        {incompleteTasks.length === 0 ? (
           <div className="text-center py-6 text-gray-500">
             <CheckCircle className="w-10 h-10 mx-auto mb-2 opacity-50" />
-            <p>Geen taken voor vandaag</p>
+            <p>Geen openstaande taken</p>
           </div>
         ) : (
           <div className="space-y-2">
-            {todayTasks.slice(0, 4).map((task) => (
+            {incompleteTasks.slice(0, 8).map((task) => (
               <TaskRow
                 key={task.id}
                 task={task}
                 onToggle={() => toggleComplete(task.id)}
               />
             ))}
-            {todayTasks.length > 4 && (
+            {incompleteTasks.length > 8 && (
               <p className="text-center text-sm text-gray-500 mt-2">
-                + {todayTasks.length - 4} meer
+                + {incompleteTasks.length - 8} meer
               </p>
             )}
           </div>
@@ -123,20 +123,40 @@ export function Dashboard({ category }: DashboardProps) {
         <div className="flex gap-3">
           <button
             onClick={() => setShowAddTask(true)}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium',
-              `bg-${accentColor}-100 text-${accentColor}-700 hover:bg-${accentColor}-200`
-            )}
+            style={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '12px',
+              borderRadius: '12px',
+              fontWeight: 500,
+              backgroundColor: category === 'work' ? '#dbeafe' : '#f3e8ff',
+              color: category === 'work' ? '#1d4ed8' : '#7c3aed',
+              border: 'none',
+              cursor: 'pointer',
+            }}
           >
             <Plus className="w-5 h-5" />
             Taak
           </button>
           <button
             onClick={() => setShowAddEvent(true)}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium',
-              `bg-${accentColor}-100 text-${accentColor}-700 hover:bg-${accentColor}-200`
-            )}
+            style={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '12px',
+              borderRadius: '12px',
+              fontWeight: 500,
+              backgroundColor: category === 'work' ? '#dbeafe' : '#f3e8ff',
+              color: category === 'work' ? '#1d4ed8' : '#7c3aed',
+              border: 'none',
+              cursor: 'pointer',
+            }}
           >
             <Plus className="w-5 h-5" />
             Afspraak
