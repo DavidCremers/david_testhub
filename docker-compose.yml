@@ -1,0 +1,48 @@
+# Aedes Carrière Nieuws Monitor - Docker Compose
+# ===============================================
+# Start: docker-compose up -d
+# Logs:  docker-compose logs -f carriere-nieuws
+# Stop:  docker-compose down
+
+version: '3.8'
+
+services:
+  carriere-nieuws:
+    build:
+      context: .
+      dockerfile: carriere_nieuws/Dockerfile
+    container_name: carriere-nieuws-monitor
+    restart: unless-stopped
+
+    environment:
+      # SMTP Configuratie (verplicht)
+      - SMTP_SERVER=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SENDER_EMAIL=${SENDER_EMAIL}
+      - SENDER_NAME=Aedes Carrière Nieuws Monitor
+
+      # Ontvangers (comma-separated)
+      - RECIPIENTS=${RECIPIENTS}
+
+      # Optionele instellingen
+      - CHECK_INTERVAL_MINUTES=60
+      - LOG_LEVEL=INFO
+      - SMTP_USE_TLS=true
+      - SMTP_USE_SSL=false
+
+    volumes:
+      # Persist cache zodat duplicaten niet opnieuw worden verstuurd
+      - carriere-nieuws-cache:/app/cache
+
+    # Logging configuratie
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  carriere-nieuws-cache:
+    name: carriere-nieuws-cache

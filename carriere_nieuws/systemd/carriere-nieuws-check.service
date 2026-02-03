@@ -1,0 +1,24 @@
+[Unit]
+Description=Check Aedes Carrière Nieuws (eenmalig)
+Documentation=https://github.com/finance-ideas/mjob-analyse
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=%i
+Group=%i
+
+# Pas dit pad aan naar je Python environment
+ExecStart=/usr/bin/python3 -m carriere_nieuws.cli check
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=carriere-nieuws
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes

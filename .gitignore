@@ -44,3 +44,11 @@ Thumbs.db
 
 # Project specific
 # Keep example data but ignore large generated files
+
+# Environment files met gevoelige gegevens
+.env
+*.env.local
+
+# Carrière nieuws cache
+.carriere_nieuws/
+carriere_nieuws_cache.json

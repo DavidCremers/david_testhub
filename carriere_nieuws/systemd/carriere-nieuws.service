@@ -1,0 +1,39 @@
+[Unit]
+Description=Aedes Carrière Nieuws Monitor
+Documentation=https://github.com/finance-ideas/mjob-analyse
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=%i
+Group=%i
+
+# Pas dit pad aan naar je Python environment
+ExecStart=/usr/bin/python3 -m carriere_nieuws.cli watch --interval 60
+
+# Herstart automatisch bij crashes
+Restart=always
+RestartSec=60
+
+# Environment variables (optioneel - kan ook via config.yaml)
+# Environment=SMTP_SERVER=smtp.gmail.com
+# Environment=SMTP_PORT=587
+# Environment=SMTP_USERNAME=jouw.email@gmail.com
+# Environment=SMTP_PASSWORD=app-wachtwoord
+# Environment=SENDER_EMAIL=jouw.email@gmail.com
+# Environment=RECIPIENTS=ontvanger1@example.com,ontvanger2@example.com
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=carriere-nieuws
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
