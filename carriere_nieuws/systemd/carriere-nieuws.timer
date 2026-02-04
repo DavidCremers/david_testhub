@@ -1,14 +1,14 @@
 [Unit]
-Description=Check Aedes Carrière Nieuws elk uur
+Description=Check Aedes Carrière Nieuws dagelijks
 Documentation=https://github.com/finance-ideas/mjob-analyse
 
 [Timer]
-# Elke 60 minuten uitvoeren
+# Elke 24 uur uitvoeren
 OnBootSec=5min
-OnUnitActiveSec=60min
+OnUnitActiveSec=24h
 
 # Willekeurige vertraging om server load te spreiden
-RandomizedDelaySec=5min
+RandomizedDelaySec=30min
 
 # Persistent: voer gemiste runs uit na reboot
 Persistent=true

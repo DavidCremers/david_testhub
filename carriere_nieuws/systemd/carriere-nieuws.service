@@ -10,7 +10,8 @@ User=%i
 Group=%i
 
 # Pas dit pad aan naar je Python environment
-ExecStart=/usr/bin/python3 -m carriere_nieuws.cli watch --interval 60
+# Standaard: check 1x per 24 uur
+ExecStart=/usr/bin/python3 -m carriere_nieuws.cli watch
 
 # Herstart automatisch bij crashes
 Restart=always

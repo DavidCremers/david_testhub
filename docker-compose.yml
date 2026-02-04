@@ -26,8 +26,8 @@ services:
       # Ontvangers (comma-separated)
       - RECIPIENTS=${RECIPIENTS}
 
-      # Optionele instellingen
-      - CHECK_INTERVAL_MINUTES=60
+      # Optionele instellingen (1440 min = 24 uur)
+      - CHECK_INTERVAL_MINUTES=1440
       - LOG_LEVEL=INFO
       - SMTP_USE_TLS=true
       - SMTP_USE_SSL=false

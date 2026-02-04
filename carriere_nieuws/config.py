@@ -36,8 +36,8 @@ class AppConfig:
     # Logging niveau
     log_level: str = "INFO"
 
-    # Check interval in minuten (voor scheduler)
-    check_interval_minutes: int = 60
+    # Check interval in minuten (voor scheduler) - standaard 1x per dag
+    check_interval_minutes: int = 1440
 
 
 def load_config(config_path: Optional[Path] = None) -> AppConfig:
@@ -106,9 +106,9 @@ def load_config(config_path: Optional[Path] = None) -> AppConfig:
     # Log niveau
     log_level = os.getenv("LOG_LEVEL", config_data.get("log_level", "INFO"))
 
-    # Check interval
+    # Check interval (standaard 1440 = 24 uur)
     check_interval = int(
-        os.getenv("CHECK_INTERVAL_MINUTES", config_data.get("check_interval_minutes", 60))
+        os.getenv("CHECK_INTERVAL_MINUTES", config_data.get("check_interval_minutes", 1440))
     )
 
     return AppConfig(
@@ -165,8 +165,8 @@ cache_file: "~/.carriere_nieuws/cache.json"
 # Logging niveau (DEBUG, INFO, WARNING, ERROR)
 log_level: "INFO"
 
-# Interval voor automatische checks (in minuten)
-check_interval_minutes: 60
+# Interval voor automatische checks (in minuten, 1440 = 24 uur)
+check_interval_minutes: 1440
 
 # Environment variables die deze instellingen overschrijven:
 # - SMTP_SERVER

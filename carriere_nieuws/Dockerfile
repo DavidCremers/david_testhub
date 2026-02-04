@@ -8,7 +8,7 @@
 #         -e SMTP_PASSWORD=app-wachtwoord \
 #         -e SENDER_EMAIL=jouw@email.com \
 #         -e RECIPIENTS=ontvanger1@email.com,ontvanger2@email.com \
-#         -e CHECK_INTERVAL_MINUTES=60 \
+#         -e CHECK_INTERVAL_MINUTES=1440 \
 #         -v carriere-nieuws-cache:/app/cache \
 #         carriere-nieuws
 
@@ -37,7 +37,7 @@ RUN mkdir -p /app/cache
 # Environment variabelen
 ENV CACHE_FILE=/app/cache/cache.json
 ENV LOG_LEVEL=INFO
-ENV CHECK_INTERVAL_MINUTES=60
+ENV CHECK_INTERVAL_MINUTES=1440
 
 # Health check
 HEALTHCHECK --interval=5m --timeout=30s --start-period=10s --retries=3 \
