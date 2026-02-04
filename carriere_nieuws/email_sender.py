@@ -1,16 +1,22 @@
 """
 Email verzending module voor Carrière Nieuws alerts.
 
-Ondersteunt SMTP verzending naar meerdere ontvangers.
+Ondersteunt meerdere email providers:
+- SendGrid (gratis: 100 emails/dag)
+- Mailgun (gratis tier beschikbaar)
+- SMTP (Gmail, Outlook, eigen server)
 """
 
 import logging
 import smtplib
 import ssl
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Optional
+
+import requests
 
 from .scraper import CarriereNieuwsItem
 
@@ -21,27 +27,243 @@ logger = logging.getLogger(__name__)
 class EmailConfig:
     """Configuratie voor email verzending."""
 
-    smtp_server: str
-    smtp_port: int
-    username: str
-    password: str
-    sender_email: str
-    sender_name: str = "Aedes Carrière Nieuws Monitor"
+    # Provider: "sendgrid", "mailgun", of "smtp"
+    provider: str = "smtp"
+
+    # API key (voor SendGrid/Mailgun)
+    api_key: str = ""
+
+    # Mailgun specifiek
+    mailgun_domain: str = ""
+
+    # SMTP specifiek
+    smtp_server: str = ""
+    smtp_port: int = 587
+    username: str = ""
+    password: str = ""
     use_tls: bool = True
     use_ssl: bool = False
+
+    # Algemeen
+    sender_email: str = ""
+    sender_name: str = "Aedes Carrière Nieuws Monitor"
+
+
+class EmailProvider(ABC):
+    """Abstract base class voor email providers."""
+
+    @abstractmethod
+    def send(self, to: list[str], subject: str, html: str, text: str) -> bool:
+        """Verstuur email."""
+        pass
+
+    @abstractmethod
+    def test_connection(self) -> bool:
+        """Test de verbinding."""
+        pass
+
+
+class SendGridProvider(EmailProvider):
+    """SendGrid email provider (gratis: 100 emails/dag)."""
+
+    API_URL = "https://api.sendgrid.com/v3/mail/send"
+
+    def __init__(self, api_key: str, sender_email: str, sender_name: str):
+        self.api_key = api_key
+        self.sender_email = sender_email
+        self.sender_name = sender_name
+
+    def send(self, to: list[str], subject: str, html: str, text: str) -> bool:
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+
+        data = {
+            "personalizations": [{"to": [{"email": addr} for addr in to]}],
+            "from": {"email": self.sender_email, "name": self.sender_name},
+            "subject": subject,
+            "content": [
+                {"type": "text/plain", "value": text},
+                {"type": "text/html", "value": html},
+            ],
+        }
+
+        try:
+            response = requests.post(self.API_URL, headers=headers, json=data, timeout=30)
+            if response.status_code in (200, 202):
+                logger.info(f"SendGrid: Email verstuurd naar {len(to)} ontvanger(s)")
+                return True
+            else:
+                logger.error(f"SendGrid fout: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            logger.error(f"SendGrid fout: {e}")
+            return False
+
+    def test_connection(self) -> bool:
+        """Test API key validiteit."""
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+        try:
+            # Check API key met scopes endpoint
+            response = requests.get(
+                "https://api.sendgrid.com/v3/scopes",
+                headers=headers,
+                timeout=10
+            )
+            return response.status_code == 200
+        except Exception as e:
+            logger.error(f"SendGrid test mislukt: {e}")
+            return False
+
+
+class MailgunProvider(EmailProvider):
+    """Mailgun email provider."""
+
+    def __init__(self, api_key: str, domain: str, sender_email: str, sender_name: str):
+        self.api_key = api_key
+        self.domain = domain
+        self.sender_email = sender_email
+        self.sender_name = sender_name
+        self.api_url = f"https://api.mailgun.net/v3/{domain}/messages"
+
+    def send(self, to: list[str], subject: str, html: str, text: str) -> bool:
+        try:
+            response = requests.post(
+                self.api_url,
+                auth=("api", self.api_key),
+                data={
+                    "from": f"{self.sender_name} <{self.sender_email}>",
+                    "to": to,
+                    "subject": subject,
+                    "text": text,
+                    "html": html,
+                },
+                timeout=30
+            )
+            if response.status_code == 200:
+                logger.info(f"Mailgun: Email verstuurd naar {len(to)} ontvanger(s)")
+                return True
+            else:
+                logger.error(f"Mailgun fout: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            logger.error(f"Mailgun fout: {e}")
+            return False
+
+    def test_connection(self) -> bool:
+        """Test API key en domain."""
+        try:
+            response = requests.get(
+                f"https://api.mailgun.net/v3/{self.domain}",
+                auth=("api", self.api_key),
+                timeout=10
+            )
+            return response.status_code == 200
+        except Exception as e:
+            logger.error(f"Mailgun test mislukt: {e}")
+            return False
+
+
+class SMTPProvider(EmailProvider):
+    """SMTP email provider (Gmail, Outlook, eigen server)."""
+
+    def __init__(self, config: EmailConfig):
+        self.config = config
+
+    def send(self, to: list[str], subject: str, html: str, text: str) -> bool:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg["From"] = f"{self.config.sender_name} <{self.config.sender_email}>"
+        msg["To"] = ", ".join(to)
+
+        msg.attach(MIMEText(text, "plain", "utf-8"))
+        msg.attach(MIMEText(html, "html", "utf-8"))
+
+        try:
+            if self.config.use_ssl:
+                context = ssl.create_default_context()
+                with smtplib.SMTP_SSL(
+                    self.config.smtp_server,
+                    self.config.smtp_port,
+                    context=context
+                ) as server:
+                    server.login(self.config.username, self.config.password)
+                    server.sendmail(self.config.sender_email, to, msg.as_string())
+            else:
+                with smtplib.SMTP(
+                    self.config.smtp_server,
+                    self.config.smtp_port
+                ) as server:
+                    if self.config.use_tls:
+                        context = ssl.create_default_context()
+                        server.starttls(context=context)
+                    server.login(self.config.username, self.config.password)
+                    server.sendmail(self.config.sender_email, to, msg.as_string())
+
+            logger.info(f"SMTP: Email verstuurd naar {len(to)} ontvanger(s)")
+            return True
+        except smtplib.SMTPException as e:
+            logger.error(f"SMTP fout: {e}")
+            return False
+        except Exception as e:
+            logger.error(f"SMTP fout: {e}")
+            return False
+
+    def test_connection(self) -> bool:
+        try:
+            if self.config.use_ssl:
+                context = ssl.create_default_context()
+                with smtplib.SMTP_SSL(
+                    self.config.smtp_server,
+                    self.config.smtp_port,
+                    context=context
+                ) as server:
+                    server.login(self.config.username, self.config.password)
+            else:
+                with smtplib.SMTP(
+                    self.config.smtp_server,
+                    self.config.smtp_port
+                ) as server:
+                    if self.config.use_tls:
+                        context = ssl.create_default_context()
+                        server.starttls(context=context)
+                    server.login(self.config.username, self.config.password)
+
+            logger.info("SMTP verbinding succesvol")
+            return True
+        except Exception as e:
+            logger.error(f"SMTP verbinding mislukt: {e}")
+            return False
+
+
+def create_provider(config: EmailConfig) -> EmailProvider:
+    """Factory functie om de juiste provider te maken."""
+    provider = config.provider.lower()
+
+    if provider == "sendgrid":
+        return SendGridProvider(
+            api_key=config.api_key,
+            sender_email=config.sender_email,
+            sender_name=config.sender_name,
+        )
+    elif provider == "mailgun":
+        return MailgunProvider(
+            api_key=config.api_key,
+            domain=config.mailgun_domain,
+            sender_email=config.sender_email,
+            sender_name=config.sender_name,
+        )
+    else:  # smtp
+        return SMTPProvider(config)
 
 
 class EmailSender:
     """Verstuurt email notificaties voor carrière nieuws."""
 
     def __init__(self, config: EmailConfig):
-        """
-        Initialiseer de email sender.
-
-        Args:
-            config: Email configuratie.
-        """
         self.config = config
+        self.provider = create_provider(config)
 
     def _create_html_content(self, items: list[CarriereNieuwsItem]) -> str:
         """Maak HTML content voor de email."""
@@ -131,17 +353,7 @@ class EmailSender:
         items: list[CarriereNieuwsItem],
         subject: Optional[str] = None,
     ) -> bool:
-        """
-        Verstuur een email notificatie naar meerdere ontvangers.
-
-        Args:
-            recipients: Lijst van email adressen.
-            items: Lijst van nieuws items om te versturen.
-            subject: Optioneel onderwerp (standaard wordt gegenereerd).
-
-        Returns:
-            True als alle emails succesvol zijn verstuurd.
-        """
+        """Verstuur een email notificatie naar meerdere ontvangers."""
         if not items:
             logger.info("Geen items om te versturen")
             return True
@@ -153,88 +365,11 @@ class EmailSender:
         if subject is None:
             subject = f"[Aedes Carrière Nieuws] {len(items)} nieuw{'e' if len(items) != 1 else ''} bericht{'en' if len(items) != 1 else ''}"
 
-        # Maak email bericht
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = subject
-        msg["From"] = f"{self.config.sender_name} <{self.config.sender_email}>"
-        msg["To"] = ", ".join(recipients)
-
-        # Voeg plain en HTML versies toe
-        plain_content = self._create_plain_content(items)
         html_content = self._create_html_content(items)
+        plain_content = self._create_plain_content(items)
 
-        msg.attach(MIMEText(plain_content, "plain", "utf-8"))
-        msg.attach(MIMEText(html_content, "html", "utf-8"))
-
-        # Verstuur email
-        try:
-            if self.config.use_ssl:
-                context = ssl.create_default_context()
-                with smtplib.SMTP_SSL(
-                    self.config.smtp_server,
-                    self.config.smtp_port,
-                    context=context
-                ) as server:
-                    server.login(self.config.username, self.config.password)
-                    server.sendmail(
-                        self.config.sender_email,
-                        recipients,
-                        msg.as_string()
-                    )
-            else:
-                with smtplib.SMTP(
-                    self.config.smtp_server,
-                    self.config.smtp_port
-                ) as server:
-                    if self.config.use_tls:
-                        context = ssl.create_default_context()
-                        server.starttls(context=context)
-                    server.login(self.config.username, self.config.password)
-                    server.sendmail(
-                        self.config.sender_email,
-                        recipients,
-                        msg.as_string()
-                    )
-
-            logger.info(f"Email verstuurd naar {len(recipients)} ontvanger(s)")
-            return True
-
-        except smtplib.SMTPException as e:
-            logger.error(f"SMTP fout bij versturen email: {e}")
-            return False
-        except Exception as e:
-            logger.error(f"Onverwachte fout bij versturen email: {e}")
-            return False
+        return self.provider.send(recipients, subject, html_content, plain_content)
 
     def test_connection(self) -> bool:
-        """
-        Test de SMTP verbinding.
-
-        Returns:
-            True als de verbinding succesvol is.
-        """
-        try:
-            if self.config.use_ssl:
-                context = ssl.create_default_context()
-                with smtplib.SMTP_SSL(
-                    self.config.smtp_server,
-                    self.config.smtp_port,
-                    context=context
-                ) as server:
-                    server.login(self.config.username, self.config.password)
-            else:
-                with smtplib.SMTP(
-                    self.config.smtp_server,
-                    self.config.smtp_port
-                ) as server:
-                    if self.config.use_tls:
-                        context = ssl.create_default_context()
-                        server.starttls(context=context)
-                    server.login(self.config.username, self.config.password)
-
-            logger.info("SMTP verbinding succesvol")
-            return True
-
-        except Exception as e:
-            logger.error(f"SMTP verbinding mislukt: {e}")
-            return False
+        """Test de email provider verbinding."""
+        return self.provider.test_connection()
