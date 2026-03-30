@@ -45,12 +45,13 @@ dev = [
 
 [project.scripts]
 mjob-analyse = "mjob_analyse.cli:main"
+woning-calc = "woning_calculator.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/finance-ideas/mjob-analyse"
 
 [tool.setuptools.packages.find]
-include = ["mjob_analyse*"]
+include = ["mjob_analyse*", "woning_calculator*"]
 
 [tool.black]
 line-length = 88
