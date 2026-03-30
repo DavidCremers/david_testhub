@@ -37,6 +37,9 @@ env/
 test_output.xlsx
 test_rapport.html
 *.log
+.coverage
+htmlcov/
+.pytest_cache/
 
 # OS
 .DS_Store
